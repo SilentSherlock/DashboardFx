@@ -13,6 +13,7 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
+    maven { url "https://mvn.mchv.eu/repository/mchv/" }
 }
 
 sourceCompatibility = '17'
@@ -53,7 +54,14 @@ dependencies {
     implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
 
     implementation 'fr.brouillard.oss:cssfx:11.5.1' // Special lib to vizualize css when app is running.. so amazing!
+    implementation 'org.telegram:telegrambots:6.8.0'
+    implementation 'org.telegram:telegrambots-abilities:6.8.0'
+    // import the BOM
+    implementation platform('it.tdlight:tdlight-java-bom:3.2.2+td.1.8.21')
 
+    // do not specify the versions on the dependencies below!
+    implementation group: 'it.tdlight', name: 'tdlight-java' // Java 8 is supported if you use the following dependency classifier: `jdk8`
+    implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'windows_amd64'
 
     implementation files('vendor/GNAvatarView-1.0.5.jar')
 
