@@ -55,7 +55,10 @@ dependencies {
 
     implementation 'fr.brouillard.oss:cssfx:11.5.1' // Special lib to vizualize css when app is running.. so amazing!
     implementation 'org.telegram:telegrambots:6.8.0'
-    implementation 'org.telegram:telegrambots-abilities:6.8.0'
+    implementation ('org.telegram:telegrambots-abilities:6.8.0') {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
+
     // import the BOM
     implementation platform('it.tdlight:tdlight-java-bom:3.2.2+td.1.8.21')
 
