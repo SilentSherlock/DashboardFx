@@ -27,6 +27,18 @@ module io.github.gleidsonmt.dashboardfx {
 
 //    requires io.github.gleidsonmt.gncontrols;
     requires scenicView;
+    requires telegrambots;
+    requires lombok;
+    requires telegrambots.abilities;
+    requires telegrambots.meta;
+    requires tdlight.java;
+    requires tdlight.api;
+    requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
+    requires org.apache.commons.codec;
+    requires org.slf4j;
+    requires ch.qos.logback.classic;
+    requires ch.qos.logback.core;
 
     opens io.github.gleidsonmt.dashboardfx to javafx.fxml;
     opens io.github.gleidsonmt.dashboardfx.controllers to javafx.fxml;

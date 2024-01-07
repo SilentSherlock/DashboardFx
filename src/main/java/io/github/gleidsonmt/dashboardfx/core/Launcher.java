@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.scenicview.ScenicView;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.logging.SimpleFormatter;
  * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
  * Create on  22/04/2023
  */
+@Slf4j
 public abstract class Launcher extends Application {
 
     private final IRoot root = new IRoot();
@@ -60,6 +62,7 @@ public abstract class Launcher extends Application {
         CSSFX.start(stage);
 //        ScenicView.show(scene);
         addLoggerHandler();
+        log.info("The App start!!");
     }
 
 
@@ -73,7 +76,7 @@ public abstract class Launcher extends Application {
             fh.setFormatter(formatter);
 
             // the following statement is used to log any messages
-            logger.setLevel(Level.OFF);
+            logger.setLevel(Level.INFO);
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }

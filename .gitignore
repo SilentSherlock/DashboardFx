@@ -8,9 +8,12 @@ annotation.txt
 tasks.txt
 scenicView.properties
 dashboard.properties
+application.properties
 DashboardFx.iml
 app.log
 app.log.lck
+*.properties
+/logs/**
 # Ignore Gradle project-specific cache directory
 .gradle
 
