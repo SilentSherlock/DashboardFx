@@ -7,6 +7,7 @@ import io.github.gleidsonmt.dashboardfx.core.base.MyPropertiesUtil;
 import io.github.gleidsonmt.dashboardfx.core.impl.IContext;
 import io.github.gleidsonmt.dashboardfx.core.impl.IRoot;
 import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeApp;
+import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeAppThread;
 import it.tdlight.Init;
 import it.tdlight.client.*;
 import it.tdlight.jni.TdApi;
@@ -99,49 +100,10 @@ public abstract class Launcher extends Application {
      */
     private void buildMoistLifeApp(Context context) {
 
-        log.info("app begin init");
-        try {
-            Init.init();
-        } catch (UnsupportedNativeLibraryException e) {
-            throw new RuntimeException(e);
-        }
-
-        try (SimpleTelegramClientFactory clientFactory = new SimpleTelegramClientFactory()){
-            APIToken apiToken = new APIToken(Integer.parseInt(Objects.requireNonNull(MyPropertiesUtil.getProperty(AppConst.Tg.app_api_id))),
-                    MyPropertiesUtil.getProperty(AppConst.Tg.app_api_hash));
-
-            TDLibSettings settings = TDLibSettings.create(apiToken);
-            //configure session
-            Path sessionPath = Paths.get("tdlib-session-57066");
-            settings.setDatabaseDirectoryPath(sessionPath.resolve("data"));
-            settings.setDownloadedFilesDirectoryPath(sessionPath.resolve("downloads"));
-
-            //prepare a client builder
-            TdApi.AddProxy proxy = new TdApi.AddProxy(
-                    AppConst.Proxy.proxy_host,
-                    AppConst.Proxy.proxy_port,
-                    true,
-                    new TdApi.ProxyTypeHttp()
-            );
-
-            SimpleTelegramClientBuilder builder = clientFactory.builder(settings);
-
-
-            //configure authentication
-            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number));
-//            settings.setUseTestDatacenter(true);
-            try (MoistLifeApp app = new MoistLifeApp(builder, supplier)){
-                SimpleTelegramClient appClient = app.getClient();
-                log.info("build proxy");
-                appClient.send(proxy, result -> System.out.println("result:" + result.toString()));
-                log.info("App start success");
-                context.setMoistLifeApp(app);
-                /*TdApi.User me = appClient.getMeAsync().get(1, TimeUnit.MINUTES);
-                TdApi.SendMessage req = new TdApi.SendMessage();*/
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread();
+        Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
+        thread.start();
+        context.setMoistLifeApp(moistLifeAppThread.getApp());
     }
     private String clean(String c) {
         return context.getResource(c).toExternalForm();
