@@ -5,6 +5,7 @@ import it.tdlight.client.SimpleTelegramClient;
 import it.tdlight.client.SimpleTelegramClientBuilder;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Scanner;
 
@@ -22,7 +23,7 @@ public class MoistLifeApp implements AutoCloseable{
         return client;
     }
 
-    public MoistLifeApp(SimpleTelegramClientBuilder builder, SimpleAuthenticationSupplier<?> authenticationSupplier) {
+    public MoistLifeApp(@NotNull SimpleTelegramClientBuilder builder, SimpleAuthenticationSupplier<?> authenticationSupplier) {
 
         //add start handler
         builder.addUpdateHandler(TdApi.UpdateAuthorizationState.class, this::onUpdateAuthorizationState);

@@ -4,6 +4,7 @@ import io.github.gleidsonmt.dashboardfx.core.Context;
 import io.github.gleidsonmt.dashboardfx.core.impl.layout.Flow;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Routes;
+import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeApp;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.SnackBar;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.Wrapper;
 import io.github.gleidsonmt.dashboardfx.core.model.SearchItem;
@@ -37,6 +38,15 @@ public class IContext implements Context {
         searchItems = FXCollections.observableArrayList();
     }
 
+    @Override
+    public MoistLifeApp moistLifeApp() {
+        return moistLifeApp;
+    }
+
+    @Override
+    public void setMoistLifeApp(MoistLifeApp moistLifeApp) {
+        this.moistLifeApp = moistLifeApp;
+    }
     @Override
     public URL getResource(String loc) {
         return Objects.requireNonNull(
@@ -106,4 +116,8 @@ public class IContext implements Context {
         if (snackBar == null) snackBar = new SnackBar(root);
         return snackBar;
     }
+
+    private MoistLifeApp moistLifeApp;
+
+
 }

@@ -4,6 +4,7 @@ import io.github.gleidsonmt.dashboardfx.core.impl.Layout;
 import io.github.gleidsonmt.dashboardfx.core.impl.layout.Flow;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Routes;
+import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeApp;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.SnackBar;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.Wrapper;
 import io.github.gleidsonmt.dashboardfx.core.model.SearchItem;
@@ -21,6 +22,8 @@ import java.util.logging.Logger;
  */
 public interface Context {
 
+    MoistLifeApp moistLifeApp();
+    void setMoistLifeApp(MoistLifeApp moistLifeApp);
     URL getResource(String res);
 
     Layout layout();
