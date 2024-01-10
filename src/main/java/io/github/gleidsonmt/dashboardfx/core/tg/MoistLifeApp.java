@@ -31,6 +31,8 @@ public class MoistLifeApp implements AutoCloseable{
         builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
         //add user log handler
         builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
+        //add update handler
+        builder.addUpdateHandler(TdApi.Update.class, this::onGetChatsResponse);
 
         this.client = builder.build(authenticationSupplier);
     }
@@ -126,6 +128,16 @@ public class MoistLifeApp implements AutoCloseable{
                 });
     }
 
+    /**
+     * handle receive the chat list of account
+     * @param update
+     */
+    private void onGetChatsResponse(TdApi.Update update) {
+        log.info("MoistLife receive a update " + update.toString());
+        switch (update.getConstructor()) {
+            case TdApi.GetChats.CONSTRUCTOR:
+        }
+    }
     @Override
     public void close() throws Exception {
         client.close();
