@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * Date: 2023/12/17
  * Author: SilentSherlock
- * Description: describe the file
+ * Description: tdlight thread, connect to telegram
  */
 @Slf4j
 public class MoistLifeAppThread implements Runnable{

@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * Date: 2024/1/7
  * Author: SilentSherlock
- * Description: describe the file
+ * Description: TG client
  */
 @Slf4j
 public class MoistLifeApp implements AutoCloseable{
@@ -31,6 +31,8 @@ public class MoistLifeApp implements AutoCloseable{
         builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
         //add user log handler
         builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
+        //add update handler
+        builder.addUpdateHandler(TdApi.Update.class, this::onUpdateCommonHandler);
 
         this.client = builder.build(authenticationSupplier);
     }
@@ -124,6 +126,26 @@ public class MoistLifeApp implements AutoCloseable{
                         System.out.printf("Received new message from chat %s (%s): %s%n", title, chatId, finalText);
                     }
                 });
+    }
+
+    /**
+     * dispatch common update, after receive from TG server
+     * @param update
+     */
+    private void onUpdateCommonHandler(TdApi.Object update) {
+        log.info("MoistLife receive a update " + update.toString());
+        switch (update.getConstructor()) {
+            case TdApi.GetChats.CONSTRUCTOR:
+                handleGetChats((TdApi.Chats) update);
+        }
+    }
+
+    /**
+     * handle receive chat list of login account
+     * @param chats
+     */
+    private void handleGetChats(TdApi.Chats chats) {
+        // TODO: 2024/1/22 add handle content
     }
 
     @Override
