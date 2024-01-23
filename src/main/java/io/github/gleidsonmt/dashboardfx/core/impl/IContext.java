@@ -12,6 +12,7 @@ import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.util.Objects;
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
  * Version 0.0.1
  * Create on  23/04/2023
  */
+@Slf4j
 public class IContext implements Context {
 
     private final Routes routes;
@@ -40,6 +42,7 @@ public class IContext implements Context {
 
     @Override
     public MoistLifeApp moistLifeApp() {
+        if (moistLifeApp != null) log.error("MoistLifeApp is called before init");
         return moistLifeApp;
     }
 

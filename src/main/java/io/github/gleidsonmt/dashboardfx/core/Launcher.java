@@ -100,10 +100,9 @@ public abstract class Launcher extends Application {
      */
     private void buildMoistLifeApp(Context context) {
 
-        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread();
+        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread(context);
         Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
         thread.start();
-        context.setMoistLifeApp(moistLifeAppThread.getApp());
     }
     private String clean(String c) {
         return context.getResource(c).toExternalForm();

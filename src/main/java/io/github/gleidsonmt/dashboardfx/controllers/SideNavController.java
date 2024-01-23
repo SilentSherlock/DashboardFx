@@ -4,6 +4,7 @@ import io.github.gleidsonmt.dashboardfx.core.Context;
 import io.github.gleidsonmt.dashboardfx.core.controls.icon.IconContainer;
 import io.github.gleidsonmt.dashboardfx.core.controls.icon.Icons;
 import io.github.gleidsonmt.dashboardfx.core.exceptions.NavigationException;
+import io.github.gleidsonmt.dashboardfx.core.exceptions.TdlightExceptionHandler;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.services.DrawerBehavior;
 import io.github.gleidsonmt.dashboardfx.core.view.SimpleView;
@@ -15,6 +16,9 @@ import io.github.gleidsonmt.dashboardfx.views.layout.AccordionViewPresCreator;
 import io.github.gleidsonmt.dashboardfx.views.layout.TabPanePresCreator;
 import io.github.gleidsonmt.dashboardfx.views.layout.TitledPanePresCreator;
 import io.github.gleidsonmt.dashboardfx.views.tutorial.NewsLetter;
+import it.tdlight.client.GenericResultHandler;
+import it.tdlight.client.Result;
+import it.tdlight.jni.TdApi;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,6 +27,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -30,19 +35,24 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
  * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
  * Create on  02/04/2023
  */
+@Slf4j
 public class SideNavController extends ActionView {
 
     @FXML private StackPane root;
     @FXML private ToggleGroup group;
     @FXML private Button arrowButton;
+    @FXML
+    private TitledPane chatListPane;
 
     @FXML
     private void goDash() throws NavigationException {
@@ -352,5 +362,19 @@ public class SideNavController extends ActionView {
         configLayout();
     }
 
-
+    @FXML
+    private void onChatListPaneClicked() {
+        log.info("Chat list pane get focus");
+        if (!chatListPane.isExpanded()) {
+            log.info("chat list expand, start get chat list of account");
+            context.moistLifeApp().getClient().send(new TdApi.GetChats(), result -> {
+                TdApi.Chats chats = result.get();
+                log.info("get chat list success with count" + chats.totalCount);
+                long[] chatIds = chats.chatIds;
+                Arrays.stream(chatIds).forEach(chatId -> {
+                    log.info("current chatId" + chatId);
+                });
+            }, new TdlightExceptionHandler());
+        }
+    }
 }

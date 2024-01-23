@@ -1,5 +1,6 @@
 package io.github.gleidsonmt.dashboardfx.core.tg;
 
+import io.github.gleidsonmt.dashboardfx.core.Context;
 import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
 import io.github.gleidsonmt.dashboardfx.core.base.MyPropertiesUtil;
 import it.tdlight.Init;
@@ -21,9 +22,11 @@ import java.util.Objects;
 public class MoistLifeAppThread implements Runnable{
     private volatile boolean runFlag;
     private MoistLifeApp app;
+    private final Context context;
 
-    public MoistLifeAppThread() {
+    public MoistLifeAppThread(Context context) {
         this.runFlag = true;
+        this.context = context;
     }
 
     public boolean isRunFlag() {
@@ -79,8 +82,10 @@ public class MoistLifeAppThread implements Runnable{
                 app = new MoistLifeApp(builder, supplier);
                 SimpleTelegramClient appClient = app.getClient();
                 log.info("build proxy");
-                appClient.send(proxy, result -> System.out.println("result:" + result.toString()));
-                log.info("App start success");
+                appClient.send(proxy, result -> {
+                    log.info("proxy set success");
+                    context.setMoistLifeApp(app);
+                });
                 while (runFlag) {
                     Thread.onSpinWait();
                 }

@@ -32,7 +32,7 @@ public class MoistLifeApp implements AutoCloseable{
         //add user log handler
         builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
         //add update handler
-        builder.addUpdateHandler(TdApi.Update.class, this::onUpdateCommonHandler);
+//        builder.addUpdateHandler(TdApi.Update.class, this::onUpdateCommonHandler);
 
         this.client = builder.build(authenticationSupplier);
     }
@@ -145,7 +145,8 @@ public class MoistLifeApp implements AutoCloseable{
      * @param chats
      */
     private void handleGetChats(TdApi.Chats chats) {
-        // TODO: 2024/1/22 add handle content
+        log.info("handle account chats");
+
     }
 
     @Override
