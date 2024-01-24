@@ -46,7 +46,6 @@ public abstract class Launcher extends Application {
     @Override
     public void start(Stage stage) {
         build(context);
-        buildMoistLifeApp(context);
         context.setStage(stage);
         Scene scene = new Scene(root);
         stage.setTitle("DashboardFx App!");
@@ -94,16 +93,7 @@ public abstract class Launcher extends Application {
         }
     }
 
-    /**
-     * init tdlight client
-     * @param context
-     */
-    private void buildMoistLifeApp(Context context) {
 
-        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread(context);
-        Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
-        thread.start();
-    }
     private String clean(String c) {
         return context.getResource(c).toExternalForm();
     }

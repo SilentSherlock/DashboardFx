@@ -124,14 +124,14 @@
                                     <RowConstraints maxHeight="125.0" minHeight="1.0" prefHeight="124.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField fx:id="username" minHeight="50.0" prefHeight="40.0" prefWidth="371.0" promptText="Your Username" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                    <TextField fx:id="phoneNumber" minHeight="50.0" prefHeight="40.0" prefWidth="371.0" promptText="区号加手机号,如'+16124457478'" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                        <styleClass>
                                           <String fx:value="lead-contact" />
                                           <String fx:value="action-clear" />
                                           <String fx:value="input-large" />
                                        </styleClass>
                                     </TextField>
-                                    <PasswordField fx:id="password" minHeight="50.0" prefHeight="40.0" promptText="Your password" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                    <!--<PasswordField fx:id="password" minHeight="50.0" prefHeight="40.0" promptText="Your password" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                        <GridPane.margin>
                                           <Insets />
                                        </GridPane.margin>
@@ -141,9 +141,9 @@
                                           <String fx:value="pw-viewer" />
                                           <String fx:value="input-large" />
                                        </styleClass>
-                                    </PasswordField>
+                                    </PasswordField>-->
                                     <Button fx:id="btn_enter" defaultButton="true" mnemonicParsing="false" onAction="#login" prefWidth="121.0" styleClass="btn-alternate" text="Login" GridPane.rowIndex="5" />
-                                    <Button cancelButton="true" layoutX="38.0" layoutY="318.0" mnemonicParsing="false" prefWidth="121.0" styleClass="btn-ripple" text="Register" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Button fx:id="register" cancelButton="true" layoutX="38.0" layoutY="318.0" mnemonicParsing="false" prefWidth="121.0" styleClass="btn-ripple" text="Register" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                     <Label fx:id="welcome" alignment="CENTER" prefHeight="38.0" prefWidth="533.0" style="-fx-font-weight: bold;" text="Welcome" textAlignment="CENTER" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
                                        <styleClass>
                                           <String fx:value="h2" />

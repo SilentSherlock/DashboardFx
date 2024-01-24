@@ -23,10 +23,19 @@ public class MoistLifeAppThread implements Runnable{
     private volatile boolean runFlag;
     private MoistLifeApp app;
     private final Context context;
+    private String phoneNumber;
 
     public MoistLifeAppThread(Context context) {
         this.runFlag = true;
         this.context = context;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public boolean isRunFlag() {
@@ -76,12 +85,13 @@ public class MoistLifeAppThread implements Runnable{
 
 
             //configure authentication
-            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number));
+            SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(phoneNumber);
 //            settings.setUseTestDatacenter(true);
             try {
-                app = new MoistLifeApp(builder, supplier);
+                app = new MoistLifeApp(builder, supplier, context);
                 SimpleTelegramClient appClient = app.getClient();
                 log.info("build proxy");
+
                 appClient.send(proxy, result -> {
                     log.info("proxy set success");
                     context.setMoistLifeApp(app);

@@ -37,4 +37,10 @@ public class AppConst {
         String proxy_host = "127.0.0.1";
         int proxy_port = 10809;
     }
+
+    public interface Nav {
+        String Drawer = "drawer";
+        String Login = "login";
+        String Dash = "dash";
+    }
 }

@@ -1,5 +1,8 @@
 package io.github.gleidsonmt.dashboardfx.core.tg;
 
+import io.github.gleidsonmt.dashboardfx.controllers.LoginController;
+import io.github.gleidsonmt.dashboardfx.core.Context;
+import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
 import it.tdlight.client.SimpleAuthenticationSupplier;
 import it.tdlight.client.SimpleTelegramClient;
 import it.tdlight.client.SimpleTelegramClientBuilder;
@@ -18,22 +21,23 @@ import java.util.Scanner;
 public class MoistLifeApp implements AutoCloseable{
 
     private final SimpleTelegramClient client;
+    private Context context;
 
     public SimpleTelegramClient getClient() {
         return client;
     }
 
-    public MoistLifeApp(@NotNull SimpleTelegramClientBuilder builder, SimpleAuthenticationSupplier<?> authenticationSupplier) {
+    public MoistLifeApp(@NotNull SimpleTelegramClientBuilder builder, SimpleAuthenticationSupplier<?> authenticationSupplier, Context context) {
 
         //add start handler
         builder.addUpdateHandler(TdApi.UpdateAuthorizationState.class, this::onUpdateAuthorizationState);
         //add msg handler
-        builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
+//        builder.addUpdateHandler(TdApi.UpdateNewMessage.class, this::onUpdateNewMessage);
         //add user log handler
-        builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
+//        builder.addUpdateHandler(TdApi.UpdateUserStatus.class, this::onUpdateUserStatus);
         //add update handler
 //        builder.addUpdateHandler(TdApi.Update.class, this::onUpdateCommonHandler);
-
+        this.context = context;
         this.client = builder.build(authenticationSupplier);
     }
 
@@ -42,9 +46,13 @@ public class MoistLifeApp implements AutoCloseable{
      * @param update
      */
     private void onUpdateAuthorizationState(TdApi.UpdateAuthorizationState update) {
+
+        LoginController loginController = (LoginController) context.routes().getView(AppConst.Nav.Login).getController();
         TdApi.AuthorizationState state = update.authorizationState;
         if (state instanceof TdApi.AuthorizationStateReady) {
             log.info("user logged in");
+            context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
+            context.routes().nav(AppConst.Nav.Dash);
         } else if (state instanceof TdApi.AuthorizationStateClosing) {
             log.info("user closing");
         } else if (state instanceof TdApi.AuthorizationStateClosed) {
@@ -52,34 +60,19 @@ public class MoistLifeApp implements AutoCloseable{
         } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
             log.info("user logged out");
         } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
-            System.out.println("请输入获取到的验证码");
-            Scanner scanner = new Scanner(System.in);
-            String code = scanner.nextLine();
+            log.info("login need WaitCode");
+            loginController.register.setVisible(false);
+            loginController.btn_enter.setText("Validate Code");
+            loginController.phoneNumber.setPromptText("请输入收到的验证码");
 
-            // 发送验证码到 TDLib
-            client.send(new TdApi.CheckAuthenticationCode(code), result -> {
-                if (result.isError()){
-                    log.info("验证码错误");
-                }
-            });
         } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
             // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
-            System.out.println("请输入您的两步验证密码:");
-            Scanner scanner = new Scanner(System.in);
-            String password = scanner.nextLine();
-
-            // 发送两步验证密码到 TDLib
-            client.send(new TdApi.CheckAuthenticationPassword(password), result -> {
-                if (result.isError()) {
-                    // 如果有错误，打印错误信息
-                    System.out.println("两步验证密码验证失败: " + result.getError().message);
-                } else {
-                    // 如果验证成功，继续后续操作
-                    System.out.println("两步验证密码验证成功!");
-                }
-            });
+            log.info("login need WaitPassword");
+            loginController.register.setVisible(false);
+            loginController.btn_enter.setText("Validate Password");
         }
     }
+
 
     /**
      * handle user login or logout

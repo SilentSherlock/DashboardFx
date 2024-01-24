@@ -5,6 +5,7 @@ import io.github.gleidsonmt.dashboardfx.core.exceptions.NavigationException;
 import io.github.gleidsonmt.dashboardfx.core.impl.Layout;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Loader;
 import io.github.gleidsonmt.dashboardfx.core.services.LoadViews;
+import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeAppThread;
 import io.github.gleidsonmt.dashboardfx.core.view.SimpleView;
 import io.github.gleidsonmt.dashboardfx.core.view.View;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.LoadCircle;
@@ -34,13 +35,24 @@ public class Main extends Launcher {
         layout.setContent((Node) loadCircle);
 
         loadViews.setOnSucceeded(event -> {
-            layout.setNav(context.routes().getView("drawer"));
-            context.routes().nav("dash");
+//            layout.setNav(context.routes().getView("drawer"));
+            context.routes().nav("login");
         });
 
         icons.add(new Image(context.getResource("style/img/logo_64.png").toExternalForm(), 128, 128, true, true));
 
 //        layout.setContent((Node) loadCircle);
+    }
+
+    /**
+     * init tdlight client
+     * @param context
+     */
+    private void buildMoistLifeApp(Context context) {
+
+        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread(context);
+        Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
+        thread.start();
     }
 
 }
