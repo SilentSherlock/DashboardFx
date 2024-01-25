@@ -74,6 +74,7 @@ public class LoginController extends ActionView {
                         .send(new TdApi.CheckAuthenticationPassword(phoneNumber), result -> {
                             if (result.isError()) {
                                 this.phoneNumber.setPromptText("Wrong Password, Please Check the Password");
+                            } else {
                                 log.info("login success!");
                                 context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
                                 context.routes().nav(AppConst.Nav.Dash);

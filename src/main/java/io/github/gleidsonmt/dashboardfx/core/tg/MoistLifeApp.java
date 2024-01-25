@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class MoistLifeApp implements AutoCloseable{
 
     private final SimpleTelegramClient client;
-    private Context context;
+    private final Context context;
 
     public SimpleTelegramClient getClient() {
         return client;
@@ -70,6 +70,8 @@ public class MoistLifeApp implements AutoCloseable{
             log.info("login need WaitPassword");
             loginController.register.setVisible(false);
             loginController.btn_enter.setText("Validate Password");
+            loginController.phoneNumber.setPromptText("请输入两步验证密码");
+
         }
     }
 

@@ -373,6 +373,7 @@ public class SideNavController extends ActionView {
                 long[] chatIds = chats.chatIds;
                 Arrays.stream(chatIds).forEach(chatId -> {
                     log.info("current chatId" + chatId);
+                    
                 });
             }, new TdlightExceptionHandler());
         }
