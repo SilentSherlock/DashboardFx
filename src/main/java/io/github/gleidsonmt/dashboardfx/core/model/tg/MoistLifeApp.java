@@ -1,4 +1,4 @@
-package io.github.gleidsonmt.dashboardfx.core.tg;
+package io.github.gleidsonmt.dashboardfx.core.model.tg;
 
 import io.github.gleidsonmt.dashboardfx.controllers.LoginController;
 import io.github.gleidsonmt.dashboardfx.core.Context;
@@ -9,8 +9,6 @@ import it.tdlight.client.SimpleTelegramClientBuilder;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Scanner;
 
 /**
  * Date: 2024/1/7
@@ -41,6 +39,8 @@ public class MoistLifeApp implements AutoCloseable{
         this.client = builder.build(authenticationSupplier);
     }
 
+
+
     /**
      * handle user state update
      * @param update
@@ -51,8 +51,11 @@ public class MoistLifeApp implements AutoCloseable{
         TdApi.AuthorizationState state = update.authorizationState;
         if (state instanceof TdApi.AuthorizationStateReady) {
             log.info("user logged in");
+            log.info("context is null :" + (null == context));
             context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
+            log.info("layout set drawer");
             context.routes().nav(AppConst.Nav.Dash);
+            log.info("route dash");
         } else if (state instanceof TdApi.AuthorizationStateClosing) {
             log.info("user closing");
         } else if (state instanceof TdApi.AuthorizationStateClosed) {

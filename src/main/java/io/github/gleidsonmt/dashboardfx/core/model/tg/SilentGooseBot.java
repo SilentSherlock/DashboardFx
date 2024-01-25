@@ -1,4 +1,4 @@
-package io.github.gleidsonmt.dashboardfx.core.tg;
+package io.github.gleidsonmt.dashboardfx.core.model.tg;
 
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.bot.AbilityBot;

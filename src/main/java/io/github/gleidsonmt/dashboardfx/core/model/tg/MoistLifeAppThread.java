@@ -1,4 +1,4 @@
-package io.github.gleidsonmt.dashboardfx.core.tg;
+package io.github.gleidsonmt.dashboardfx.core.model.tg;
 
 import io.github.gleidsonmt.dashboardfx.core.Context;
 import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
@@ -56,7 +56,7 @@ public class MoistLifeAppThread implements Runnable{
 
     @Override
     public void run() {
-        log.info("app start");
+        log.info("MoistLifeApp Thread starting!");
         try {
             Init.init();
         } catch (UnsupportedNativeLibraryException e) {

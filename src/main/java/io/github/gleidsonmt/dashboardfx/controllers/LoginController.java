@@ -19,19 +19,16 @@
 
 package io.github.gleidsonmt.dashboardfx.controllers;
 
-import io.github.gleidson28.App;
 import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
 import io.github.gleidsonmt.dashboardfx.core.base.MyPropertiesUtil;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
-import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeAppThread;
+import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeAppThread;
 import it.tdlight.jni.TdApi;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Scanner;
 
 /**
  * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
@@ -108,28 +105,5 @@ public class LoginController extends ActionView {
 
     }
 
-    public void onUpdateAuthorizationState(TdApi.UpdateAuthorizationState update) {
-        TdApi.AuthorizationState state = update.authorizationState;
-        if (state instanceof TdApi.AuthorizationStateReady) {
-            log.info("user logged in");
-        } else if (state instanceof TdApi.AuthorizationStateClosing) {
-            log.info("user closing");
-        } else if (state instanceof TdApi.AuthorizationStateClosed) {
-            log.info("user close");
-        } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
-            log.info("user logged out");
-        } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
-            log.info("login need WaitCode");
-            register.setVisible(false);
-            btn_enter.setText("Validate Code");
-            phoneNumber.setPromptText("请输入收到的验证码");
-
-        } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
-            // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
-            log.info("login need WaitPassword");
-            register.setVisible(false);
-            btn_enter.setText("Validate Password");
-        }
-    }
 
 }

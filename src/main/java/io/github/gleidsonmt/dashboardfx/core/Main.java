@@ -1,12 +1,9 @@
 package io.github.gleidsonmt.dashboardfx.core;
 
-import io.github.gleidsonmt.dashboardfx.core.controls.icon.IconContainer;
-import io.github.gleidsonmt.dashboardfx.core.exceptions.NavigationException;
 import io.github.gleidsonmt.dashboardfx.core.impl.Layout;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Loader;
 import io.github.gleidsonmt.dashboardfx.core.services.LoadViews;
-import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeAppThread;
-import io.github.gleidsonmt.dashboardfx.core.view.SimpleView;
+import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeAppThread;
 import io.github.gleidsonmt.dashboardfx.core.view.View;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.LoadCircle;
 import javafx.concurrent.Task;

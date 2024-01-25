@@ -4,7 +4,7 @@ import io.github.gleidsonmt.dashboardfx.core.impl.Layout;
 import io.github.gleidsonmt.dashboardfx.core.impl.layout.Flow;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Routes;
-import io.github.gleidsonmt.dashboardfx.core.tg.MoistLifeApp;
+import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.SnackBar;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.Wrapper;
 import io.github.gleidsonmt.dashboardfx.core.model.SearchItem;
