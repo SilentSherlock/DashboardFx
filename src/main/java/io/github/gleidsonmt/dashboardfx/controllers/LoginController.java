@@ -22,7 +22,8 @@ package io.github.gleidsonmt.dashboardfx.controllers;
 import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
 import io.github.gleidsonmt.dashboardfx.core.base.MyPropertiesUtil;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
-import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeAppThread;
+import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
+import it.tdlight.client.GenericUpdateHandler;
 import it.tdlight.jni.TdApi;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,13 +43,13 @@ public class LoginController extends ActionView {
     @FXML
     public Button register;
     @FXML
-    public TextField phoneNumber;
+    public TextField phoneNumberField;
 
 
     @FXML
-    private void login() throws InterruptedException {
+    private void login() {
         log.info("Telegram user login");
-        String phoneNumber = this.phoneNumber.getText();
+        String phoneNumber = this.phoneNumberField.getText();
         if (!register.isVisible()) {
 
             log.info("validate state");
@@ -58,7 +59,7 @@ public class LoginController extends ActionView {
                         .getClient()
                         .send(new TdApi.CheckAuthenticationCode(phoneNumber), result -> {
                             if (result.isError()) {
-                                this.phoneNumber.setPromptText("Wrong Code, Please Check the Code");
+                                this.phoneNumberField.setPromptText("Wrong Code, Please Check the Code");
                             } else {
                                 log.info("login success!");
                                 context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
@@ -70,7 +71,7 @@ public class LoginController extends ActionView {
                         .getClient()
                         .send(new TdApi.CheckAuthenticationPassword(phoneNumber), result -> {
                             if (result.isError()) {
-                                this.phoneNumber.setPromptText("Wrong Password, Please Check the Password");
+                                this.phoneNumberField.setPromptText("Wrong Password, Please Check the Password");
                             } else {
                                 log.info("login success!");
                                 context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
@@ -88,18 +89,39 @@ public class LoginController extends ActionView {
             }
             phoneNumber = MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number);
 
-            log.info("start tg login thread");
-            MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread(context);
-            moistLifeAppThread.setPhoneNumber(phoneNumber);
+            MoistLifeApp moistLifeApp = MoistLifeApp.login(context, phoneNumber, new GenericUpdateHandler<TdApi.UpdateAuthorizationState>() {
+                @Override
+                public void onUpdate(TdApi.UpdateAuthorizationState update) {
+                    TdApi.AuthorizationState state = update.authorizationState;
+                    if (state instanceof TdApi.AuthorizationStateReady) {
+                        log.info("user logged in, put moistLifeApp into context");
+//                        context.setMoistLifeApp(moistLifeApp);
+                        context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
+                        log.info("layout set drawer");
+                        context.routes().nav(AppConst.Nav.Dash);
+                        log.info("route dash");
+                    } else if (state instanceof TdApi.AuthorizationStateClosing) {
+                        log.info("user closing");
+                    } else if (state instanceof TdApi.AuthorizationStateClosed) {
+                        log.info("user close");
+                    } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
+                        log.info("user logged out");
+                    } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
+                        log.info("login need WaitCode");
+                        register.setVisible(false);
+                        btn_enter.setText("Validate Code");
+                        phoneNumberField.setPromptText("请输入收到的验证码");
 
-            log.info("add AuthorizationState handler");
-            Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
-            thread.start();
-            this.wait(10000);
-            log.info("login start");
-            /*context.moistLifeApp()
-                    .getClient()
-                    .addUpdateHandler(TdApi.UpdateAuthorizationState.class, this::onUpdateAuthorizationState);*/
+                    } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
+                        // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
+                        log.info("login need WaitPassword");
+                        register.setVisible(false);
+                        btn_enter.setText("Validate Password");
+                        phoneNumberField.setPromptText("请输入两步验证密码");
+
+                    }
+                }
+            });
 
         }
 

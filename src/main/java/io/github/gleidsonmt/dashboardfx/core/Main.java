@@ -3,7 +3,6 @@ package io.github.gleidsonmt.dashboardfx.core;
 import io.github.gleidsonmt.dashboardfx.core.impl.Layout;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.Loader;
 import io.github.gleidsonmt.dashboardfx.core.services.LoadViews;
-import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeAppThread;
 import io.github.gleidsonmt.dashboardfx.core.view.View;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.LoadCircle;
 import javafx.concurrent.Task;
@@ -41,15 +40,5 @@ public class Main extends Launcher {
 //        layout.setContent((Node) loadCircle);
     }
 
-    /**
-     * init tdlight client
-     * @param context
-     */
-    private void buildMoistLifeApp(Context context) {
-
-        MoistLifeAppThread moistLifeAppThread = new MoistLifeAppThread(context);
-        Thread thread = new Thread(moistLifeAppThread, "MoistLife86");
-        thread.start();
-    }
 
 }

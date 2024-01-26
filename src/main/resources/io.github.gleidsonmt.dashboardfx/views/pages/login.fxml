@@ -124,7 +124,7 @@
                                     <RowConstraints maxHeight="125.0" minHeight="1.0" prefHeight="124.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField fx:id="phoneNumber" minHeight="50.0" prefHeight="40.0" prefWidth="371.0" promptText="区号加手机号,如'+16124457478'" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                    <TextField fx:id="phoneNumberField" minHeight="50.0" prefHeight="40.0" prefWidth="371.0" promptText="区号加手机号,如'+16124457478'" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP">
                                        <styleClass>
                                           <String fx:value="lead-contact" />
                                           <String fx:value="action-clear" />
