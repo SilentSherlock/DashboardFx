@@ -42,6 +42,11 @@ javafx {
                "javafx.swing"]
 }
 
+configurations.all {
+//    compile.exclude('it.tdlight:tdlight-api:legacy:4.0.465')
+//    exclude 'it.tdlight:tdlight-api:legacy:4.0.465'
+}
+
 dependencies {
 
     implementation 'org.yaml:snakeyaml:1.33'
@@ -58,7 +63,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.9'
     implementation 'ch.qos.logback:logback-core:1.4.12'
     implementation 'ch.qos.logback:logback-classic:1.4.12'
-    implementation 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     implementation 'org.apache.commons:commons-lang3:3.12.0'
@@ -69,6 +74,9 @@ dependencies {
     implementation ('org.telegram:telegrambots-abilities:6.8.0') {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
+    /*implementation 'org.eclipse.collections:eclipse-collections-api:7.0.0'
+    implementation 'org.eclipse.collections:eclipse-collections:7.0.0'
+    implementation 'org.eclipse.collections:eclipse-collections-forkjoin:7.0.0'*/
 
     // lib to build telegram desktop
     implementation platform('it.tdlight:tdlight-java-bom:3.2.2+td.1.8.21')
@@ -109,9 +117,9 @@ jlink {
         installerType = 'exe'
         installerOptions += '--verbose'
         installerOptions = [
-                '--description', "Projeto Dashboard Fx.",
-                '--vendor', 'Gleidson Neves da Silveira',
-                '--copyright', 'Copyrigth © 2021-2023 GLEIDSON NEVES DA SILVEIRA'
+                '--description', "MoistLife",
+                '--vendor', 'SilentSherlock',
+                '--copyright', 'Copyright © 2023-2024 ShangHai'
 //                'win-console', 'true'
 //                , '--icon', 'logoT.ico'
 

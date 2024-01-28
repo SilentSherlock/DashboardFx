@@ -8,11 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-/**
- * Date: 2024/1/7
- * Author: SilentSherlock
- * Description: describe the file
- */
+
+
+
 @Slf4j
 public class SilentGooseBot extends AbilityBot {
 
@@ -23,6 +21,10 @@ public class SilentGooseBot extends AbilityBot {
 
     public SilentGooseBot(String botToken, String botUsername, DefaultBotOptions options) {
         super(botToken, botUsername, options);
+    }
+
+    public static void start() {
+
     }
 
     @Override

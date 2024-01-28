@@ -23,7 +23,6 @@ import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
 import io.github.gleidsonmt.dashboardfx.core.base.MyPropertiesUtil;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
-import it.tdlight.client.GenericUpdateHandler;
 import it.tdlight.jni.TdApi;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
