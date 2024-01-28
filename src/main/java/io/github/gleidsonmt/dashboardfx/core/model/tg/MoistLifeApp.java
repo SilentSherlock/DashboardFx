@@ -7,6 +7,7 @@ import it.tdlight.Init;
 import it.tdlight.client.*;
 import it.tdlight.jni.TdApi;
 import it.tdlight.util.UnsupportedNativeLibraryException;
+import javafx.concurrent.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ import java.util.Objects;
  * Description: TG client
  */
 @Slf4j
-public class MoistLifeApp implements AutoCloseable, Runnable {
+public class MoistLifeApp {
 
     private SimpleTelegramClient client;
     private final Context context;
@@ -34,42 +35,13 @@ public class MoistLifeApp implements AutoCloseable, Runnable {
 
     public MoistLifeApp(@NotNull SimpleTelegramClientBuilder builder,
                         @NotNull SimpleAuthenticationSupplier<?> authenticationSupplier,
+                        @NotNull SimpleTelegramClient client,
                         @NotNull Context context) {
         this.context = context;
         this.builder = builder;
+        this.client = client;
         this.authenticationSupplier = authenticationSupplier;
         this.runFlag = true;
-    }
-
-    @Override
-    public void close() throws Exception {
-        client.close();
-    }
-
-
-    /**
-     * build MoistLifeApp Thread
-     */
-    @Override
-    public void run() {
-
-        log.info("MoistLife thread starting!");
-        client = builder.build(authenticationSupplier);
-
-        log.info("send proxy");
-        TdApi.AddProxy proxy = new TdApi.AddProxy(
-                AppConst.Proxy.proxy_host,
-                AppConst.Proxy.proxy_port,
-                true,
-                new TdApi.ProxyTypeHttp()
-        );
-
-        client.send(proxy, result -> {
-            log.info("proxy set success");
-        });
-        while (runFlag) {
-            Thread.onSpinWait();
-        }
     }
 
     /**
@@ -90,7 +62,8 @@ public class MoistLifeApp implements AutoCloseable, Runnable {
             throw new RuntimeException(e);
         }
 
-        try (SimpleTelegramClientFactory clientFactory = new SimpleTelegramClientFactory()){
+        try {
+            SimpleTelegramClientFactory clientFactory = new SimpleTelegramClientFactory();
             APIToken apiToken = new APIToken(Integer.parseInt(Objects.requireNonNull(MyPropertiesUtil.getProperty(AppConst.Tg.app_api_id))),
                     MyPropertiesUtil.getProperty(AppConst.Tg.app_api_hash));
 
@@ -107,13 +80,28 @@ public class MoistLifeApp implements AutoCloseable, Runnable {
             //configure authentication
             SimpleAuthenticationSupplier<?> supplier = AuthenticationSupplier.user(phoneNumber);
             try {
-                moistLifeApp = new MoistLifeApp(builder, supplier, context);
-                new Thread(moistLifeApp, "MoistLife86").start();
+                SimpleTelegramClient client = builder.build(supplier);
+                moistLifeApp = new MoistLifeApp(builder, supplier, client, context);
+                log.info("send proxy");
+                TdApi.AddProxy proxy = new TdApi.AddProxy(
+                        AppConst.Proxy.proxy_host,
+                        AppConst.Proxy.proxy_port,
+                        true,
+                        new TdApi.ProxyTypeHttp()
+                );
+
+                client.send(proxy, result -> {
+                    log.info("proxy set success");
+                });
+                log.info("context.setMoistLifeApp(moistLifeApp)");
                 context.setMoistLifeApp(moistLifeApp);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        log.info("Login end");
         return moistLifeApp;
     }
 

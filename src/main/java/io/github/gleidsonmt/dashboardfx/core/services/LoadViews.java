@@ -6,6 +6,7 @@ import io.github.gleidsonmt.dashboardfx.core.view.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
  * Version 0.0.1
  * Create on  02/04/2023
  */
+@Slf4j
 public class LoadViews extends Task<View> {
 
     private ViewMap data;
@@ -42,6 +44,7 @@ public class LoadViews extends Task<View> {
             Thread.sleep(100);
 
             Platform.runLater(() -> {
+                log.info("build loading views:" + viewComposer.getName());
                 loader.updateLegend("Loading view... " + viewComposer.getName());
                 loadView(viewComposer);
             });

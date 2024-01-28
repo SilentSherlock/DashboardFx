@@ -25,6 +25,7 @@ import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
 import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
 import it.tdlight.client.GenericUpdateHandler;
 import it.tdlight.jni.TdApi;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -89,40 +90,43 @@ public class LoginController extends ActionView {
             }
             phoneNumber = MyPropertiesUtil.getProperty(AppConst.Tg.user_phone_number);
 
-            MoistLifeApp moistLifeApp = MoistLifeApp.login(context, phoneNumber, new GenericUpdateHandler<TdApi.UpdateAuthorizationState>() {
-                @Override
-                public void onUpdate(TdApi.UpdateAuthorizationState update) {
-                    TdApi.AuthorizationState state = update.authorizationState;
-                    if (state instanceof TdApi.AuthorizationStateReady) {
-                        log.info("user logged in, put moistLifeApp into context");
+            MoistLifeApp.login(context, phoneNumber, update -> {
+                TdApi.AuthorizationState state = update.authorizationState;
+                if (state instanceof TdApi.AuthorizationStateReady) {
+                    log.info("user logged in, put moistLifeApp into context");
 //                        context.setMoistLifeApp(moistLifeApp);
+                    Platform.runLater(() -> {
                         context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
                         log.info("layout set drawer");
                         context.routes().nav(AppConst.Nav.Dash);
                         log.info("route dash");
-                    } else if (state instanceof TdApi.AuthorizationStateClosing) {
-                        log.info("user closing");
-                    } else if (state instanceof TdApi.AuthorizationStateClosed) {
-                        log.info("user close");
-                    } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
-                        log.info("user logged out");
-                    } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
+                    });
+                } else if (state instanceof TdApi.AuthorizationStateClosing) {
+                    log.info("user closing");
+                } else if (state instanceof TdApi.AuthorizationStateClosed) {
+                    log.info("user close");
+                } else if (state instanceof TdApi.AuthorizationStateLoggingOut) {
+                    log.info("user logged out");
+                } else if (state instanceof TdApi.AuthorizationStateWaitCode) {
+                    Platform.runLater(() -> {
                         log.info("login need WaitCode");
                         register.setVisible(false);
                         btn_enter.setText("Validate Code");
                         phoneNumberField.setPromptText("请输入收到的验证码");
+                    });
 
-                    } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
-                        // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
+                } else if (state instanceof TdApi.AuthorizationStateWaitPassword) {
+                    // 当状态为 AuthorizationStateWaitPassword 时，提示用户输入两步验证密码
+                    Platform.runLater(() -> {
                         log.info("login need WaitPassword");
                         register.setVisible(false);
                         btn_enter.setText("Validate Password");
                         phoneNumberField.setPromptText("请输入两步验证密码");
-
-                    }
+                    });
                 }
             });
 
+            log.info("login end");
         }
 
     }

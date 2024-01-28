@@ -8,6 +8,7 @@ import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.SnackBar;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.Wrapper;
 import io.github.gleidsonmt.dashboardfx.core.model.SearchItem;
+import it.tdlight.client.SimpleTelegramClient;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.ApiStatus;
@@ -24,6 +25,10 @@ public interface Context {
 
     MoistLifeApp moistLifeApp();
     void setMoistLifeApp(MoistLifeApp moistLifeApp);
+
+    SimpleTelegramClient getClient();
+
+    void setClient(SimpleTelegramClient client);
     URL getResource(String res);
 
     Layout layout();

@@ -8,6 +8,8 @@ import io.github.gleidsonmt.dashboardfx.core.model.tg.MoistLifeApp;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.SnackBar;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.Wrapper;
 import io.github.gleidsonmt.dashboardfx.core.model.SearchItem;
+import it.tdlight.TelegramClient;
+import it.tdlight.client.SimpleTelegramClient;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +35,8 @@ public class IContext implements Context {
 
     private final ObservableList<SearchItem> searchItems;
 
+    private SimpleTelegramClient simpleTelegramClient;
+
     public IContext(IRoot root, HostServices hostServices) {
         this.root = root;
         this.hostServices = hostServices;
@@ -50,6 +54,23 @@ public class IContext implements Context {
     public void setMoistLifeApp(MoistLifeApp moistLifeApp) {
         this.moistLifeApp = moistLifeApp;
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public SimpleTelegramClient getClient() {
+        return simpleTelegramClient;
+    }
+
+    /**
+     * @param client
+     */
+    @Override
+    public void setClient(SimpleTelegramClient client) {
+
+    }
+
     @Override
     public URL getResource(String loc) {
         return Objects.requireNonNull(
