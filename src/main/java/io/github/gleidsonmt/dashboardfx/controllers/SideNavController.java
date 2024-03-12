@@ -38,7 +38,9 @@ import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -371,9 +373,14 @@ public class SideNavController extends ActionView {
                 TdApi.Chats chats = result.get();
                 log.info("get chat list success with count" + chats.totalCount);
                 long[] chatIds = chats.chatIds;
+                List<TdApi.Chat> groupChats = new ArrayList<>();
+                List<TdApi.Chat> channelChats = new ArrayList<>();
+                List<TdApi.Chat> userChats = new ArrayList<>();
                 Arrays.stream(chatIds).forEach(chatId -> {
                     log.info("current chatId" + chatId);
-                    
+                    context.moistLifeApp().getClient().send(new TdApi.GetChat(), getChatResult -> {
+                        // TODO: 2024/3/12 add chat operation
+                    });
                 });
             }, new TdlightExceptionHandler());
         }

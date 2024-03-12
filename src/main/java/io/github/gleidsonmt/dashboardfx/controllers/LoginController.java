@@ -59,6 +59,7 @@ public class LoginController extends ActionView {
                         .getClient()
                         .send(new TdApi.CheckAuthenticationCode(phoneNumber), result -> {
                             if (result.isError()) {
+                                //current code untested, update GUI, maybe use Platform.runLater
                                 this.phoneNumberField.setPromptText("Wrong Code, Please Check the Code");
                             } else {
                                 log.info("login success!");
