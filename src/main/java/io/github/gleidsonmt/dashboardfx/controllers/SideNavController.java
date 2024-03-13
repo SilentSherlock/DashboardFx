@@ -368,21 +368,39 @@ public class SideNavController extends ActionView {
     private void onChatListPaneClicked() {
         log.info("Chat list pane get focus");
         if (!chatListPane.isExpanded()) {
+
             log.info("chat list expand, start get chat list of account");
+
+            List<TdApi.Chat> groupChats = new ArrayList<>();
+            List<TdApi.Chat> channelChats = new ArrayList<>();
+            List<TdApi.Chat> userChats = new ArrayList<>();
             context.moistLifeApp().getClient().send(new TdApi.GetChats(), result -> {
                 TdApi.Chats chats = result.get();
                 log.info("get chat list success with count" + chats.totalCount);
                 long[] chatIds = chats.chatIds;
-                List<TdApi.Chat> groupChats = new ArrayList<>();
-                List<TdApi.Chat> channelChats = new ArrayList<>();
-                List<TdApi.Chat> userChats = new ArrayList<>();
+
                 Arrays.stream(chatIds).forEach(chatId -> {
                     log.info("current chatId" + chatId);
-                    context.moistLifeApp().getClient().send(new TdApi.GetChat(), getChatResult -> {
-                        // TODO: 2024/3/12 add chat operation
+                    context.moistLifeApp().getClient().send(new TdApi.GetChat(), chatResult -> {
+                        TdApi.Chat chat = chatResult.get();
+                        TdApi.ChatType chatType = chat.type;
+                        if (chatType instanceof TdApi.ChatTypeBasicGroup || chatType instanceof TdApi.ChatTypeSupergroup) {
+                            if (chatType instanceof TdApi.ChatTypeSupergroup && ((TdApi.ChatTypeSupergroup) chatType).isChannel) {
+                                channelChats.add(chat);
+                            } else {
+                                groupChats.add(chat);
+                            }
+                        } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
+                            userChats.add(chat);
+                        }
                     });
                 });
             }, new TdlightExceptionHandler());
+
+            log.info("count: groupChats{}, channelChats{}, userChants{}", groupChats.size(), channelChats.size(), userChats.size());
+            log.info("insert chat panel");
+
+
         }
     }
 }
