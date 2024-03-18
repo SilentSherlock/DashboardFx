@@ -16,8 +16,6 @@ import io.github.gleidsonmt.dashboardfx.views.layout.AccordionViewPresCreator;
 import io.github.gleidsonmt.dashboardfx.views.layout.TabPanePresCreator;
 import io.github.gleidsonmt.dashboardfx.views.layout.TitledPanePresCreator;
 import io.github.gleidsonmt.dashboardfx.views.tutorial.NewsLetter;
-import it.tdlight.client.GenericResultHandler;
-import it.tdlight.client.Result;
 import it.tdlight.jni.TdApi;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -37,11 +35,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
@@ -72,12 +68,14 @@ public class SideNavController extends ActionView {
     }
 
     @FXML
-    private void goButton() {
+    private void goChannelChats() {
+        // TODO: 2024/3/18 go to channel chats
         go("button", new ButtonPresCreator(context));
     }
 
     @FXML
-    private void goCheckBox() {
+    private void goUserChats() {
+        // TODO: 2024/3/18 go to user chats
         go("view_check", new CheckBoxPresCreator(context));
     }
 
@@ -182,7 +180,8 @@ public class SideNavController extends ActionView {
     }
 
     @FXML
-    private void goCarousel() {
+    private void goGroupChats() {
+        // TODO: 2024/3/18 go group chats
         go("carousel", new CarouselViewPresCreator(context));
     }
 
@@ -374,7 +373,7 @@ public class SideNavController extends ActionView {
             List<TdApi.Chat> groupChats = new ArrayList<>();
             List<TdApi.Chat> channelChats = new ArrayList<>();
             List<TdApi.Chat> userChats = new ArrayList<>();
-            context.moistLifeApp().getClient().send(new TdApi.GetChats(), result -> {
+            context.moistLifeApp().getClient().send(new TdApi.GetChats(null, 10), result -> {
                 TdApi.Chats chats = result.get();
                 log.info("get chat list success with count" + chats.totalCount);
                 long[] chatIds = chats.chatIds;
@@ -395,11 +394,11 @@ public class SideNavController extends ActionView {
                         }
                     });
                 });
+
+                log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
+                log.info("insert chat panel");
+
             }, new TdlightExceptionHandler());
-
-            log.info("count: groupChats{}, channelChats{}, userChants{}", groupChats.size(), channelChats.size(), userChats.size());
-            log.info("insert chat panel");
-
 
         }
     }

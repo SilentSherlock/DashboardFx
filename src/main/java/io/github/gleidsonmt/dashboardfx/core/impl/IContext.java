@@ -46,7 +46,7 @@ public class IContext implements Context {
 
     @Override
     public MoistLifeApp moistLifeApp() {
-        if (moistLifeApp != null) log.error("MoistLifeApp is called before init");
+        if (moistLifeApp == null) log.error("MoistLifeApp is called before init");
         return moistLifeApp;
     }
 

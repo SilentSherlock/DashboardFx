@@ -63,6 +63,7 @@ public class LoginController extends ActionView {
                                 this.phoneNumberField.setPromptText("Wrong Code, Please Check the Code");
                             } else {
                                 log.info("login success!");
+                                // add navigator and navigate to dash default
                                 context.layout().setNav(context.routes().getView(AppConst.Nav.Drawer));
                                 context.routes().nav(AppConst.Nav.Dash);
                             }
