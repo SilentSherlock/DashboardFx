@@ -46,6 +46,9 @@ import java.util.List;
 @Slf4j
 public class SideNavController extends ActionView {
 
+    private List<TdApi.Chat> groupChats = new ArrayList<>();
+    private List<TdApi.Chat> channelChats = new ArrayList<>();
+    private List<TdApi.Chat> userChats = new ArrayList<>();
     @FXML private StackPane root;
     @FXML private ToggleGroup group;
     @FXML private Button arrowButton;
@@ -370,9 +373,6 @@ public class SideNavController extends ActionView {
 
             log.info("chat list expand, start get chat list of account");
 
-            List<TdApi.Chat> groupChats = new ArrayList<>();
-            List<TdApi.Chat> channelChats = new ArrayList<>();
-            List<TdApi.Chat> userChats = new ArrayList<>();
             context.moistLifeApp().getClient().send(new TdApi.GetChats(null, 10), result -> {
                 TdApi.Chats chats = result.get();
                 log.info("get chat list success with count" + chats.totalCount);
