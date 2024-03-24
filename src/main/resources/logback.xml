@@ -26,4 +26,5 @@
     </root>
     <!-- 自定义logger -->
     <logger name="io.github.gleidsonmt.dashboardfx" level="debug"/>
+    <logger name="it.tdlight" level="debug"/>
 </configuration>

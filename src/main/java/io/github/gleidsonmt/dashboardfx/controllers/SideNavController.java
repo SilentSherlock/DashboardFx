@@ -382,6 +382,10 @@ public class SideNavController extends ActionView {
                 log.info("get chat list success with count {}", chats.totalCount);
                 long[] chatIds = chats.chatIds;
 
+                CompletableFuture<TdApi.Chat> futureChat = context.moistLifeApp().getClient().sendUnsafe(new TdApi.GetChat(chatIds[0]));
+                log.info("Start get Chat");
+                TdApi.Chat chat = futureChat.join();
+                log.info("Chat is ready {}", chat);
                 /*List<CompletableFuture<TdApi.Chat>> futureChatList = new ArrayList<>();
                 for (long chatId : chatIds){
                     log.info("current chatId {}", chatId);
@@ -394,17 +398,17 @@ public class SideNavController extends ActionView {
                     });
                     futureChatList.add(futureChat);
                 }*/
-                List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
+                /*List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
                         chatId -> {
                             log.info("current chatId {}", chatId);
                             return context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId));
                         }
-                ).toList();
+                ).toList();*/
 
                 log.info("get 0 test");
 
                 log.info("waiting for all chat result ready");
-                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
+                /*CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
                     List<TdApi.Chat> allChats = new ArrayList<>();
                     futures.forEach(future -> allChats.add(future.join()));
                     chatListFuture.complete(allChats); // 完成聊天列表的CompletableFuture
@@ -424,7 +428,7 @@ public class SideNavController extends ActionView {
                     } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
                         userChats.add(chat);
                     }
-                });
+                });*/
 
                 log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
                 log.info("insert chat panel");
