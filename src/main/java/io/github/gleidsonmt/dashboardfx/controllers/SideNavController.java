@@ -35,9 +35,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
@@ -375,26 +376,51 @@ public class SideNavController extends ActionView {
 
             context.moistLifeApp().getClient().send(new TdApi.GetChats(null, 10), result -> {
                 TdApi.Chats chats = result.get();
-                log.info("get chat list success with count" + chats.totalCount);
+                log.info("get chat list success with count {}", chats.totalCount);
                 long[] chatIds = chats.chatIds;
 
-                Arrays.stream(chatIds).forEach(chatId -> {
-                    log.info("current chatId" + chatId);
-                    context.moistLifeApp().getClient().send(new TdApi.GetChat(), chatResult -> {
-                        TdApi.Chat chat = chatResult.get();
-                        TdApi.ChatType chatType = chat.type;
-                        if (chatType instanceof TdApi.ChatTypeBasicGroup || chatType instanceof TdApi.ChatTypeSupergroup) {
-                            if (chatType instanceof TdApi.ChatTypeSupergroup && ((TdApi.ChatTypeSupergroup) chatType).isChannel) {
-                                channelChats.add(chat);
-                            } else {
-                                groupChats.add(chat);
-                            }
-                        } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
-                            userChats.add(chat);
-                        }
+                /*List<CompletableFuture<TdApi.Chat>> futureChatList = new ArrayList<>();
+                for (long chatId : chatIds){
+                    log.info("current chatId {}", chatId);
+                    CompletableFuture<TdApi.Chat> futureChat = new CompletableFuture<>();
+                    context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId), result1 -> {
+                        log.info("GetChat ready callback");
+                        TdApi.Chat chat = result1.get();
+                        log.info("Chat: {}", chat);
+                        futureChat.complete(result1.get());
                     });
-                });
+                    futureChatList.add(futureChat);
+                }*/
+                List<CompletableFuture<TdApi.Chat>> futureChatList = Arrays.stream(chatIds).mapToObj(
+                        chatId -> {
+                            log.info("current chatId {}", chatId);
+                            return context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId));
+                        }
+                ).toList();
 
+                log.info("get 0 test");
+
+                log.info("waiting for all chat result ready");
+                CompletableFuture.allOf(futureChatList.toArray(new CompletableFuture[0]));
+
+                futureChatList.forEach(chatCompletableFuture -> {
+                    TdApi.Chat chat;
+                    try {
+                        chat = chatCompletableFuture.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                    TdApi.ChatType chatType = chat.type;
+                    if (chatType instanceof TdApi.ChatTypeBasicGroup || chatType instanceof TdApi.ChatTypeSupergroup) {
+                        if (chatType instanceof TdApi.ChatTypeSupergroup && ((TdApi.ChatTypeSupergroup) chatType).isChannel) {
+                            channelChats.add(chat);
+                        } else {
+                            groupChats.add(chat);
+                        }
+                    } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
+                        userChats.add(chat);
+                    }
+                });
                 log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
                 log.info("insert chat panel");
 
