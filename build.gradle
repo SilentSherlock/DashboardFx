@@ -79,7 +79,7 @@ dependencies {
     implementation 'org.eclipse.collections:eclipse-collections-forkjoin:7.0.0'*/
 
     // lib to build telegram desktop
-    implementation platform('it.tdlight:tdlight-java-bom:3.2.2+td.1.8.21')
+    implementation platform('it.tdlight:tdlight-java-bom:3.4.0+td.1.8.26')
     // do not specify the versions on the dependencies below!
     implementation group: 'it.tdlight', name: 'tdlight-java' // Java 8 is supported if you use the following dependency classifier: `jdk8`
     implementation group: 'it.tdlight', name: 'tdlight-natives', classifier: 'windows_amd64'
