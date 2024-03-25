@@ -43,4 +43,9 @@ public class AppConst {
         String Login = "login";
         String Dash = "dash";
     }
+
+    public interface File {
+        String observe_channels = "/io/github/gleidsonmt/dashboardfx/observe_channels.txt";
+
+    }
 }

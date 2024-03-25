@@ -370,7 +370,7 @@ public class SideNavController extends ActionView {
     @FXML
     private void onChatListPaneClicked() {
         log.info("Chat list pane get focus");
-        if (!chatListPane.isExpanded()) {
+        if (chatListPane.isExpanded()) {
 
             log.info("chat list expand, start get chat list of account");
 
@@ -405,7 +405,9 @@ public class SideNavController extends ActionView {
                 }
             });
 
-            log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
+            log.info("count: groupChats {}, channelChats {}, userChats {}", groupChats.size(), channelChats.size(), userChats.size());
+
+
         }
     }
 }
