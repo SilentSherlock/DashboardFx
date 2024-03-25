@@ -374,8 +374,14 @@ public class SideNavController extends ActionView {
 
             log.info("chat list expand, start get chat list of account");
 
+            CompletableFuture<TdApi.Chats> chatsCompletableFuture = context.moistLifeApp()
+                    .getClient().sendUnsafe(new TdApi.GetChats(null, 10));
+            log.info("Start get chats");
+            TdApi.Chats chats = chatsCompletableFuture.join();
+            log.info("Chats is ready {}", chats);
+
             // 创建一个CompletableFuture来存储聊天列表
-            CompletableFuture<List<TdApi.Chat>> chatListFuture = new CompletableFuture<>();
+            /*CompletableFuture<List<TdApi.Chat>> chatListFuture = new CompletableFuture<>();
 
             context.moistLifeApp().getClient().send(new TdApi.GetChats(null, 10), result -> {
                 TdApi.Chats chats = result.get();
@@ -386,7 +392,7 @@ public class SideNavController extends ActionView {
                 log.info("Start get Chat");
                 TdApi.Chat chat = futureChat.join();
                 log.info("Chat is ready {}", chat);
-                /*List<CompletableFuture<TdApi.Chat>> futureChatList = new ArrayList<>();
+                *//*List<CompletableFuture<TdApi.Chat>> futureChatList = new ArrayList<>();
                 for (long chatId : chatIds){
                     log.info("current chatId {}", chatId);
                     CompletableFuture<TdApi.Chat> futureChat = new CompletableFuture<>();
@@ -397,18 +403,18 @@ public class SideNavController extends ActionView {
                         futureChat.complete(result1.get());
                     });
                     futureChatList.add(futureChat);
-                }*/
-                /*List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
+                }*//*
+                *//*List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
                         chatId -> {
                             log.info("current chatId {}", chatId);
                             return context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId));
                         }
-                ).toList();*/
+                ).toList();*//*
 
                 log.info("get 0 test");
 
                 log.info("waiting for all chat result ready");
-                /*CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
+                *//*CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
                     List<TdApi.Chat> allChats = new ArrayList<>();
                     futures.forEach(future -> allChats.add(future.join()));
                     chatListFuture.complete(allChats); // 完成聊天列表的CompletableFuture
@@ -428,12 +434,12 @@ public class SideNavController extends ActionView {
                     } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
                         userChats.add(chat);
                     }
-                });*/
+                });*//*
 
                 log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
                 log.info("insert chat panel");
 
-            }, new TdlightExceptionHandler());
+            }, new TdlightExceptionHandler());*/
 
         }
     }
