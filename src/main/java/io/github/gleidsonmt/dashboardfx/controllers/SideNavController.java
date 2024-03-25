@@ -374,73 +374,38 @@ public class SideNavController extends ActionView {
 
             log.info("chat list expand, start get chat list of account");
 
-            CompletableFuture<TdApi.Chats> chatsCompletableFuture = context.moistLifeApp()
+            CompletableFuture<TdApi.Chats> chatsFuture = context.moistLifeApp()
                     .getClient().sendUnsafe(new TdApi.GetChats(null, 10));
-            log.info("Start get chats");
-            TdApi.Chats chats = chatsCompletableFuture.join();
+            log.info("Start get chats with compose");
+            TdApi.Chats chats = chatsFuture.join();
             log.info("Chats is ready {}", chats);
-
-            // 创建一个CompletableFuture来存储聊天列表
-            /*CompletableFuture<List<TdApi.Chat>> chatListFuture = new CompletableFuture<>();
-
-            context.moistLifeApp().getClient().send(new TdApi.GetChats(null, 10), result -> {
-                TdApi.Chats chats = result.get();
-                log.info("get chat list success with count {}", chats.totalCount);
-                long[] chatIds = chats.chatIds;
-
-                CompletableFuture<TdApi.Chat> futureChat = context.moistLifeApp().getClient().sendUnsafe(new TdApi.GetChat(chatIds[0]));
-                log.info("Start get Chat");
-                TdApi.Chat chat = futureChat.join();
-                log.info("Chat is ready {}", chat);
-                *//*List<CompletableFuture<TdApi.Chat>> futureChatList = new ArrayList<>();
-                for (long chatId : chatIds){
-                    log.info("current chatId {}", chatId);
-                    CompletableFuture<TdApi.Chat> futureChat = new CompletableFuture<>();
-                    context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId), result1 -> {
-                        log.info("GetChat ready callback");
-                        TdApi.Chat chat = result1.get();
-                        log.info("Chat: {}", chat);
-                        futureChat.complete(result1.get());
-                    });
-                    futureChatList.add(futureChat);
-                }*//*
-                *//*List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
-                        chatId -> {
-                            log.info("current chatId {}", chatId);
-                            return context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId));
-                        }
-                ).toList();*//*
-
-                log.info("get 0 test");
-
-                log.info("waiting for all chat result ready");
-                *//*CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenAccept(v -> {
-                    List<TdApi.Chat> allChats = new ArrayList<>();
-                    futures.forEach(future -> allChats.add(future.join()));
-                    chatListFuture.complete(allChats); // 完成聊天列表的CompletableFuture
-                    log.info("waiting for all chat result already");
-                });
-
-                List<TdApi.Chat> chatList = chatListFuture.join();
-                chatList.forEach(chat -> {
-
-                    TdApi.ChatType chatType = chat.type;
-                    if (chatType instanceof TdApi.ChatTypeBasicGroup || chatType instanceof TdApi.ChatTypeSupergroup) {
-                        if (chatType instanceof TdApi.ChatTypeSupergroup && ((TdApi.ChatTypeSupergroup) chatType).isChannel) {
-                            channelChats.add(chat);
-                        } else {
-                            groupChats.add(chat);
-                        }
-                    } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
-                        userChats.add(chat);
+            long[] chatIds = chats.chatIds;
+            List<CompletableFuture<TdApi.Chat>> futures = Arrays.stream(chatIds).mapToObj(
+                    chatId -> {
+                        log.info("current chatId {}", chatId);
+                        return context.moistLifeApp().getClient().send(new TdApi.GetChat(chatId));
                     }
-                });*//*
+            ).toList();
 
-                log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
-                log.info("insert chat panel");
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+            log.info("Chat list already");
 
-            }, new TdlightExceptionHandler());*/
+            futures.forEach(chatFuture -> {
 
+                TdApi.Chat chat = chatFuture.join();
+                TdApi.ChatType chatType = chat.type;
+                if (chatType instanceof TdApi.ChatTypeBasicGroup || chatType instanceof TdApi.ChatTypeSupergroup) {
+                    if (chatType instanceof TdApi.ChatTypeSupergroup && ((TdApi.ChatTypeSupergroup) chatType).isChannel) {
+                        channelChats.add(chat);
+                    } else {
+                        groupChats.add(chat);
+                    }
+                } else if (chatType instanceof TdApi.ChatTypePrivate || chatType instanceof TdApi.ChatTypeSecret) {
+                    userChats.add(chat);
+                }
+            });
+
+            log.info("count: groupChats {}, channelChats {}, userChants {}", groupChats.size(), channelChats.size(), userChats.size());
         }
     }
 }
