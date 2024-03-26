@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Date: 2024/3/25
@@ -26,7 +27,7 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
         long fromMsgId = 0;
         do {
             log.info("fetch unread message");
-            CompletableFuture<TdApi.Messages> futureMessages = context.getClient().send(
+            CompletableFuture<TdApi.Messages> futureMessages = context.moistLifeApp().getClient().send(
                     new TdApi.GetChatHistory(chat.id, fromMsgId, 0, 100, false)
             );
 
@@ -42,12 +43,26 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
                 fromMsgId = 0;
             }
 
+            log.info("send view mark to server");
+            context.moistLifeApp().getClient().send(new TdApi.ViewMessages(chat.id,
+                    Arrays.stream(unreadMessages).mapToLong(message -> message.id).toArray(),
+                    null,
+                    true
+                    ));
+
         } while (fromMsgId == 0);
+
+        unProcessMessages.forEach((aLong, message) -> handleMessage(message));
 
     }
 
     public void process(List<TdApi.Chat> chats, Context context) {
         chats.forEach(v -> process(v, context));
+    }
+
+    private boolean handleMessage(TdApi.Message message) {
+        log.info("message is {}", message);
+        return true;
     }
 
 }

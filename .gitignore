@@ -22,4 +22,5 @@ app.log.lck
 /build/**
 /gradle/
 /.gradle/**
-/tdlib-session-57066/
+/tdlib-session*
+/tdlib-session-+17652475345/

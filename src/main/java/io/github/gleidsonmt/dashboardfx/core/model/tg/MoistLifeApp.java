@@ -69,7 +69,7 @@ public class MoistLifeApp {
 
             TDLibSettings settings = TDLibSettings.create(apiToken);
             //configure session
-            Path sessionPath = Paths.get("tdlib-session-57066");
+            Path sessionPath = Paths.get("tdlib-session-" + phoneNumber);
             settings.setDatabaseDirectoryPath(sessionPath.resolve("data"));
             settings.setDownloadedFilesDirectoryPath(sessionPath.resolve("downloads"));
 

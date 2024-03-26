@@ -1,11 +1,14 @@
 package io.github.gleidsonmt.dashboardfx.controllers;
 
 import io.github.gleidsonmt.dashboardfx.core.Context;
+import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
+import io.github.gleidsonmt.dashboardfx.core.base.FileUtils;
 import io.github.gleidsonmt.dashboardfx.core.controls.icon.IconContainer;
 import io.github.gleidsonmt.dashboardfx.core.controls.icon.Icons;
 import io.github.gleidsonmt.dashboardfx.core.exceptions.NavigationException;
 import io.github.gleidsonmt.dashboardfx.core.exceptions.TdlightExceptionHandler;
 import io.github.gleidsonmt.dashboardfx.core.interfaces.ActionView;
+import io.github.gleidsonmt.dashboardfx.core.process.ChatsProcessor;
 import io.github.gleidsonmt.dashboardfx.core.services.DrawerBehavior;
 import io.github.gleidsonmt.dashboardfx.core.view.SimpleView;
 import io.github.gleidsonmt.dashboardfx.core.view.layout.DialogContainer;
@@ -407,7 +410,10 @@ public class SideNavController extends ActionView {
 
             log.info("count: groupChats {}, channelChats {}, userChats {}", groupChats.size(), channelChats.size(), userChats.size());
 
-
+            Map<Long, ChatsProcessor> chatsProcessorMap = FileUtils.getObserveChannels(AppConst.File.observe_channels);
+            channelChats.forEach(chat -> {
+                chatsProcessorMap.get(chat.id).process(chat, context);
+            });
         }
     }
 }
