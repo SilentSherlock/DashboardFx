@@ -14,4 +14,13 @@ import java.util.List;
 public interface ChatsProcessor {
     void process(TdApi.Chat chat, Context context);
     void process(List<TdApi.Chat> chats, Context context);
+
+    /**
+     *
+     * @param message
+     * @return true-viewed
+     */
+    default boolean isMessageUnRead(TdApi.Message message) {
+        return !message.isOutgoing && message.containsUnreadMention;
+    }
 }
