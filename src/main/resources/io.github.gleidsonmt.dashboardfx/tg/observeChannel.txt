@@ -1,1 +1,1 @@
--1001692633324
+-1001692633324,io.github.gleidsonmt.dashboardfx.core.process.impl.channel.ChannelChatsProcessor1

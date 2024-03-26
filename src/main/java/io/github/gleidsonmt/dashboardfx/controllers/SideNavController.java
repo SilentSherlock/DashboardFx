@@ -378,7 +378,7 @@ public class SideNavController extends ActionView {
             log.info("chat list expand, start get chat list of account");
 
             CompletableFuture<TdApi.Chats> chatsFuture = context.moistLifeApp()
-                    .getClient().sendUnsafe(new TdApi.GetChats(null, 10));
+                    .getClient().sendUnsafe(new TdApi.GetChats(null, 100));
             log.info("Start get chats with compose");
             TdApi.Chats chats = chatsFuture.join();
             log.info("Chats is ready {}", chats);
@@ -411,9 +411,13 @@ public class SideNavController extends ActionView {
             log.info("count: groupChats {}, channelChats {}, userChats {}", groupChats.size(), channelChats.size(), userChats.size());
 
             Map<Long, ChatsProcessor> chatsProcessorMap = FileUtils.getObserveChannels(AppConst.File.observe_channels);
-            channelChats.forEach(chat -> {
-                chatsProcessorMap.get(chat.id).process(chat, context);
-            });
+            for (TdApi.Chat cur:
+                 channelChats) {
+                if (chatsProcessorMap.containsKey(cur.id)) {
+                    chatsProcessorMap.get(cur.id).process(cur, context);
+                }
+            }
+
         }
     }
 }

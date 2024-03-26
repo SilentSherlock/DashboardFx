@@ -44,6 +44,7 @@ public class FileUtils {
                 ChatsProcessor chatsProcessor = (ChatsProcessor) clazz.getDeclaredConstructor().newInstance();
                 map.put(chatId, chatsProcessor);
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                log.info(e.getMessage());
                 e.printStackTrace();
             }
         });
