@@ -18,7 +18,7 @@ public interface ChatsProcessor {
     /**
      *
      * @param message
-     * @return true-viewed
+     * @return true-unread
      */
     default boolean isMessageUnRead(TdApi.Message message) {
         return !message.isOutgoing && message.containsUnreadMention;

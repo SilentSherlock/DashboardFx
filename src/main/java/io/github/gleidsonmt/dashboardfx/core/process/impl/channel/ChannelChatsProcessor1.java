@@ -38,8 +38,8 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
                 unProcessMessages.put(message.id, message);
             });
             fromMsgId = unreadMessages[unreadMessages.length-1].id;
-            if (!isMessageUnRead(unreadMessages[unreadMessages.length-1])) {
-                log.info("all unread message has been fetched");
+            if (!isMessageUnRead(unreadMessages[unreadMessages.length-1]) || 10000 <= unProcessMessages.size()) {
+                log.info("all unread message has been fetched and unProcessMessage size {}", unProcessMessages.size());
                 fromMsgId = 0;
             }
 
@@ -50,7 +50,7 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
                     true
                     ));
 
-        } while (fromMsgId == 0);
+        } while (fromMsgId != 0);
 
         unProcessMessages.forEach((aLong, message) -> handleMessage(message));
 
@@ -62,6 +62,9 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
 
     private boolean handleMessage(TdApi.Message message) {
         log.info("message is {}", message);
+
+
+
         return true;
     }
 
