@@ -62,6 +62,7 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
 
     private boolean handleMessage(TdApi.Message message) {
         log.info("message is {}", message);
+        TdApi.MessageContent content = message.content;
 
 
 
