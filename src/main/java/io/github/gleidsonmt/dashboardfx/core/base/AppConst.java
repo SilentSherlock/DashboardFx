@@ -46,6 +46,6 @@ public class AppConst {
 
     public interface File {
         String observe_channels = "C:\\codePrograms\\DashboardFx\\src\\main\\resources\\io.github.gleidsonmt.dashboardfx\\tg\\observeChannel.txt";
-
+        String channel_message_folder = "channelMessage/";
     }
 }
