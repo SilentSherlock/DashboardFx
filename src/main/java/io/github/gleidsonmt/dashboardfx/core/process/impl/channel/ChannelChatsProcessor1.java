@@ -1,13 +1,17 @@
 package io.github.gleidsonmt.dashboardfx.core.process.impl.channel;
 
 import io.github.gleidsonmt.dashboardfx.core.Context;
+import io.github.gleidsonmt.dashboardfx.core.base.AppConst;
+import io.github.gleidsonmt.dashboardfx.core.base.JsonUtils;
 import io.github.gleidsonmt.dashboardfx.core.process.ChatsProcessor;
 import it.tdlight.jni.TdApi;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * Date: 2024/3/25
@@ -65,7 +69,7 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
         log.info("message is {}", message);
         TdApi.MessageContent content = message.content;
 
-
+        JsonUtils.writeObjectToJsonFile(content, AppConst.File.channel_message_folder.concat(String.valueOf(message.chatId).concat(".json")));
 
         return true;
     }

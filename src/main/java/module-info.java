@@ -39,6 +39,7 @@ module io.github.gleidsonmt.dashboardfx {
     requires org.slf4j;
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
+    requires gson;
 
     opens io.github.gleidsonmt.dashboardfx to javafx.fxml;
     opens io.github.gleidsonmt.dashboardfx.controllers to javafx.fxml;
