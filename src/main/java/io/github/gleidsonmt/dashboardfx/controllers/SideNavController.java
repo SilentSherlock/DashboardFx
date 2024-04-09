@@ -414,7 +414,7 @@ public class SideNavController extends ActionView {
             for (TdApi.Chat cur:
                  channelChats) {
                 if (chatsProcessorMap.containsKey(cur.id)) {
-                    chatsProcessorMap.get(cur.id).process(cur, context);
+                    chatsProcessorMap.get(cur.id).process(cur, context, true);
                 }
             }
 

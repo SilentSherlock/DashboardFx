@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ChannelChatsProcessor1 implements ChatsProcessor {
 
-    public void process(TdApi.Chat chat, Context context) {
+    public void process(TdApi.Chat chat, Context context, boolean firstFlag) {
 
         log.info("ChannelChatsProcessor1 start");
 
@@ -61,8 +61,8 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
 
     }
 
-    public void process(List<TdApi.Chat> chats, Context context) {
-        chats.forEach(v -> process(v, context));
+    public void process(List<TdApi.Chat> chats, Context context, boolean firstFlag) {
+        chats.forEach(v -> process(v, context, firstFlag));
     }
 
     private boolean handleMessage(TdApi.Message message) {

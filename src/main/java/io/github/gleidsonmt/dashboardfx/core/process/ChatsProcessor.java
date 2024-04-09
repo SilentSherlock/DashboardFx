@@ -12,8 +12,14 @@ import java.util.List;
  * has its particular process in most situations
  */
 public interface ChatsProcessor {
-    void process(TdApi.Chat chat, Context context);
-    void process(List<TdApi.Chat> chats, Context context);
+    /**
+     * process single message
+     * @param chat message history in this chat will be fetched and processed
+     * @param context application context
+     * @param firstFlag true--message history never processed, will fetch message history up to message_max_size, even if the message viewed or not
+     */
+    void process(TdApi.Chat chat, Context context, boolean firstFlag);
+    void process(List<TdApi.Chat> chats, Context context, boolean firstFlag);
 
     /**
      *
