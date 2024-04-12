@@ -29,33 +29,70 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
 
         Map<Long, TdApi.Message> unProcessMessages = new HashMap<>();
         long fromMsgId = 0;
-        do {
-            log.info("fetch unread message");
-            CompletableFuture<TdApi.Messages> futureMessages = context.moistLifeApp().getClient().send(
-                    new TdApi.GetChatHistory(chat.id, fromMsgId, 0, 100, false)
-            );
+        if (firstFlag) {
+            log.info("first process, unProcessMessage size will <= AppConst.File.message_max_size");
 
-            log.info("check current bulk messages, and mark all as viewed, if the earliest message (length -1)" +
-                    "viewed already, means there's no unread message need fetch ");
-            TdApi.Message[] unreadMessages = futureMessages.join().messages;
-            Arrays.stream(unreadMessages).forEach(message -> {
-                unProcessMessages.put(message.id, message);
-            });
-            fromMsgId = unreadMessages[unreadMessages.length-1].id;
-            if (!isMessageUnRead(unreadMessages[unreadMessages.length-1]) || 10000 <= unProcessMessages.size()) {
-                log.info("all unread message has been fetched and unProcessMessage size {}", unProcessMessages.size());
-                fromMsgId = 0;
-            }
+            do {
+                log.info("fetch unread message");
+                CompletableFuture<TdApi.Messages> futureMessages = context.moistLifeApp().getClient().send(
+                        new TdApi.GetChatHistory(chat.id, fromMsgId, 0, 100, false)
+                );
 
-            log.info("send view mark to server");
-            log.info("send view mark pause for test handle message");
-            /*context.moistLifeApp().getClient().send(new TdApi.ViewMessages(chat.id,
-                    Arrays.stream(unreadMessages).mapToLong(message -> message.id).toArray(),
-                    null,
-                    true
-                    ));*/
+                log.info("check current bulk messages, and mark all as viewed, if the earliest message (length -1)" +
+                        "viewed already, means there's no unread message need fetch ");
+                TdApi.Message[] unreadMessages = futureMessages.join().messages;
+                Arrays.stream(unreadMessages).forEach(message -> {
+                    unProcessMessages.put(message.id, message);
+                });
+                fromMsgId = unreadMessages[unreadMessages.length-1].id;
+                if (unreadMessages.length < 100 || AppConst.File.message_max_size <= unProcessMessages.size()) {
+                    log.info("all unread message has been fetched and unProcessMessage size {}", unProcessMessages.size());
+                    fromMsgId = 0;
+                }
 
-        } while (fromMsgId != 0);
+                log.info("send view mark to server");
+                log.info("send view mark pause for test handle message");
+                /*context.moistLifeApp().getClient().send(new TdApi.ViewMessages(chat.id,
+                        Arrays.stream(unreadMessages).mapToLong(message -> message.id).toArray(),
+                        null,
+                        true
+                ));*/
+            } while (fromMsgId != 0);
+        } else {
+            log.info("not first process, fetch will finished when reach the last viewed message or unProcessMessages.size() = AppConst.File.message_max_size");
+
+            do {
+                log.info("fetch unread message");
+                CompletableFuture<TdApi.Messages> futureMessages = context.moistLifeApp().getClient().send(
+                        new TdApi.GetChatHistory(chat.id, fromMsgId, 0, 100, false)
+                );
+
+                log.info("check current bulk messages, and mark all as viewed, if the earliest message (length -1)" +
+                        "viewed already, means there's no unread message need fetch ");
+                TdApi.Message[] unreadMessages = futureMessages.join().messages;
+                Arrays.stream(unreadMessages).forEach(message -> {
+                    unProcessMessages.put(message.id, message);
+                });
+                fromMsgId = unreadMessages[unreadMessages.length-1].id;
+                if (unreadMessages.length < 100
+                        || !isMessageUnRead(unreadMessages[unreadMessages.length-1])
+                        || AppConst.File.message_max_size <= unProcessMessages.size()) {
+                    log.info("all unread message has been fetched and unProcessMessage size {}", unProcessMessages.size());
+                    fromMsgId = 0;
+                }
+
+
+                log.info("send view mark to server");
+                log.info("send view mark pause for test handle message");
+                context.moistLifeApp().getClient().send(new TdApi.ViewMessages(chat.id,
+                        Arrays.stream(unreadMessages).mapToLong(message -> message.id).toArray(),
+                        null,
+                        true
+                ));
+            } while (fromMsgId != 0);
+
+        }
+
 
         unProcessMessages.forEach((aLong, message) -> handleMessage(message));
 
@@ -65,13 +102,12 @@ public class ChannelChatsProcessor1 implements ChatsProcessor {
         chats.forEach(v -> process(v, context, firstFlag));
     }
 
-    private boolean handleMessage(TdApi.Message message) {
+    private void handleMessage(TdApi.Message message) {
         log.info("message is {}", message);
         TdApi.MessageContent content = message.content;
 
         JsonUtils.writeObjectToJsonFile(content, AppConst.File.channel_message_folder.concat(String.valueOf(message.chatId).concat(".json")));
 
-        return true;
     }
 
 }
